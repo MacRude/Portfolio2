@@ -1,3 +1,5 @@
+//Made by Hennis and Mennis
+
 public class Main {
 
     public static void main(String[] args) {
@@ -46,7 +48,6 @@ public class Main {
         thisGraph.newEdge(E,I,47);
         thisGraph.newEdge(E,J,48);
         thisGraph.newEdge(E,K,34);
-        thisGraph.newEdge(E,K,34);
         thisGraph.newEdge(E,D,40);
         thisGraph.newEdge(N,L,34);
         thisGraph.newEdge(N,M,44);
@@ -82,12 +83,9 @@ public class Main {
         thisGraph.newEdge(H,K,15);
         thisGraph.newEdge(H,D,58);
         thisGraph.newEdge(J,K,14);
-        thisGraph.printGraph();
-
-
-
-
-
+        //thisGraph.printGraph();
+        thisGraph.printMST();
+        thisGraph.MSTPrims();
 
     }
 }

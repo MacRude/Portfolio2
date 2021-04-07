@@ -2,85 +2,118 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class AdjacencyGraph {
+
     private ArrayList<Vertex> vertices;
 
-    public AdjacencyGraph(){
+
+    public AdjacencyGraph() {
         vertices = new ArrayList<Vertex>();
     }
-    public void addVertex(Vertex v){
+
+    public void addVertex(Vertex v) {
         vertices.add(v);
     }
-    public void newEdge(Vertex from, Vertex to, Integer dist){
-        if ( ! (vertices.contains(from) && vertices.contains(to))){
+
+    public void addWeight(Vertex j) {
+        vertices.add(j);
+    }
+
+    public void newEdge(Vertex from, Vertex to, Integer dist) {
+        if (!(vertices.contains(from) && vertices.contains(to))) {
             System.out.println(" Vertex not found. ");
             return;
         }
         Edge newEdge = new Edge(from, to, dist);
+        Edge newEdge2 = new Edge(to, from, dist);
     }
-    public void printGraph(){
+
+    public void printGraph() {
         Vertex currentv;
-        for (int i = 0; i < vertices.size(); i++){
+        for (int i = 0; i < vertices.size(); i++) {
             currentv = vertices.get(i);
             System.out.println(" Edges from Vertex: " + currentv.getName());
-            for (int j = 0; j < currentv.getOutEdges().size();j++){
+            for (int j = 0; j < currentv.getOutEdges().size(); j++) {
                 Edge currentEdge = currentv.getOutEdges().get(j);
-                System.out.println(" To " + currentv.getOutEdges().get(j).getToVertex().getName() + " weight: " + currentEdge.getWeight());
+                System.out.println(" To " + currentv.getOutEdges().get(j).getToVertex().getName() + " distance: " + currentEdge.getWeight());
 
             }
             System.out.println(" ");
         }
     }
-    /*
-    public void MSTPrims(){
-        int[] Distance =new int[matrixegdegraph.length];
-        int[] predecessor = new int[matrixegdegraph.length];
-        boolean[] visited =  new boolean[matrixegdegraph.length];
-        MinHeap<Pair> Q =new MinHeap<>();
-        PriorityQueue<Pair> PQ = new PriorityQueue<>(); // offer (add) poll (extactmin)
+//Sætter start distances lig med 0, og adderer distancen fra get(i) til predecessor
+    //MST er kun de distancer som bliver hevet ud af Q
+    public void MSTPrims() {
 
-        ArrayList<Pair> VertexPairs=new ArrayList<>();
-        Arrays.fill(Distance, Integer.MAX_VALUE);
-        Arrays.fill(predecessor,-1);
-        Arrays.fill(visited,false);
-        if (matrixegdegraph.length>0)
-            Distance[0]=0;
-        for(int i=0;i<matrixegdegraph.length;i++) {
-            VertexPairs.add(new Pair(Distance[i], i));
-            Q.Insert(VertexPairs.get(i));
+        PriorityQueue<Vertex> Q = new PriorityQueue<Vertex>();
+
+        if (vertices.size() > 0) {
+            vertices.get(0).distance = 0;
+            Q.offer(vertices.get(0));
         }
-        int MST=0;
-        while(!Q.isEmpty()){
-            Pair u=Q.extractMin();
-            for(int v=0;v<matrixegdegraph.length;v++){
-                if(matrixegdegraph[u.index][v]==1 && matrixweightgraph[u.index][v]<Distance[v])
-                {
-                    if(!visited[v]) {
-                        Distance[v] = matrixweightgraph[u.index][v];
-                        predecessor[v] = u.index;
-                        int pos = Q.getPosition(VertexPairs.get(v));
-                        VertexPairs.get(v).distance = matrixweightgraph[u.index][v];
-                        Q.decreasekey(pos);
+
+        //MST bliver lavet når den hiver en vertex ud, da den kun hiver den ud med den korteste distance, PQ er bare en liste
+        //MST bliver "lavet" via predecessor og distance, distance er kun den distance i vores MST, dvs. de elementer der bliver hevet ud
+
+        int counter = 0;
+        int MST = 0;
+
+
+        while (!Q.isEmpty() && counter < vertices.size()) {
+            Vertex u = Q.poll();
+            if (!u.visited) {
+                for (int i = 0; i < u.getOutEdges().size(); i++) {
+                    if ((!u.getOutEdges().get(i).getToVertex().visited) && u.getOutEdges().get(i).getWeight() <
+                            u.getOutEdges().get(i).getToVertex().distance) {
+                        u.getOutEdges().get(i).getToVertex().distance = u.getOutEdges().get(i).getWeight();
+                        u.getOutEdges().get(i).getToVertex().predecessor = u;
+                        Q.offer(u.getOutEdges().get(i).getToVertex());
                     }
                 }
+
+                u.visited = true;
+                counter++;  //Counter bliver lavet for at stoppe vores while loop, da PQ har flere af de samme elementer
+                MST += u.distance; //Kun distance mellem de vertices vi har hevet ud
+
             }
-            MST+=Distance[u.index];
         }
-        System.out.println("Minimum spanning tree Dsitance: " +MST);
-        for(int i=0; i< matrixegdegraph.length;i++)
-        {
-            System.out.println(" parent "+ predecessor[i] + " to " + i + " EdgeWeight: " + Distance[i]);
+        int finalPrice = MST * 100000;
+        System.out.println("Weight of the MST is: " + MST + "km \n" +
+                "The final price of the grid is: " + finalPrice + "kr \n");
+
+    }
+    public void printMST() {
+        for (int i = 0; i < vertices.size(); i++) {
+            if (vertices.get(i).predecessor != null) {
+                System.out.println(vertices.get(i).predecessor.getName() + " to " + vertices.get(i).getName() + " Edge Weight: " + vertices.get(i).distance + "km");
+            }
         }
     }
-     */
+
 
 }
-
 
 class Vertex implements Comparable<Vertex>{
     private String name;
     private ArrayList<Edge> outEdges;
     Integer distance = Integer.MAX_VALUE;
+    Vertex predecessor = null;
+    Boolean visited = false;
 
+    public Vertex getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(Vertex predecessor) {
+        this.predecessor = predecessor;
+    }
+
+    public Boolean getVisited() {
+        return visited;
+    }
+
+    public void setVisited(Boolean visited) {
+        this.visited = visited;
+    }
     public String getName() {
         return name;
     }
@@ -161,4 +194,18 @@ class Edge{
         from.addOutEdge(this);
     }
 
+}
+class Pair implements Comparable<Pair>{
+    Integer distance;
+    Integer index;
+
+    public Pair(Integer distance, Integer index){
+        this.distance=distance;
+        this.index = index;
+    }
+
+    @Override
+    public int compareTo(Pair p){
+        return this.distance.compareTo(p.distance);
+    }
 }
