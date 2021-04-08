@@ -1,4 +1,4 @@
-//Made by Hennis and Mennis
+//Made by Henrik Riskær and Magnus Rude
 
 public class Main {
 
@@ -83,9 +83,10 @@ public class Main {
         thisGraph.newEdge(H,K,15);
         thisGraph.newEdge(H,D,58);
         thisGraph.newEdge(J,K,14);
-        //thisGraph.printGraph();
-        thisGraph.printMST();
+        thisGraph.printGraph();
         thisGraph.MSTPrims();
+        thisGraph.printMST();
+
 
     }
 }

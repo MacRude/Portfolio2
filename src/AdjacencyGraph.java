@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.PriorityQueue;
-
+//Lave an arraylist der består af Vertex, som har kanter til og fra disse vertex'
 public class AdjacencyGraph {
 
     private ArrayList<Vertex> vertices;
@@ -14,9 +14,6 @@ public class AdjacencyGraph {
         vertices.add(v);
     }
 
-    public void addWeight(Vertex j) {
-        vertices.add(j);
-    }
 
     public void newEdge(Vertex from, Vertex to, Integer dist) {
         if (!(vertices.contains(from) && vertices.contains(to))) {
@@ -71,14 +68,14 @@ public class AdjacencyGraph {
                 }
 
                 u.visited = true;
-                counter++;  //Counter bliver lavet for at stoppe vores while loop, da PQ har flere af de samme elementer
+                counter++;  //Counter bliver lavet for at stoppe vores while loop, da Q har flere af de samme elementer
                 MST += u.distance; //Kun distance mellem de vertices vi har hevet ud
 
             }
         }
         int finalPrice = MST * 100000;
         System.out.println("Weight of the MST is: " + MST + "km \n" +
-                "The final price of the grid is: " + finalPrice + "kr \n");
+                "The final price of the grid is: " + finalPrice + "kr \n" );
 
     }
     public void printMST() {
@@ -88,10 +85,7 @@ public class AdjacencyGraph {
             }
         }
     }
-
-
 }
-
 class Vertex implements Comparable<Vertex>{
     private String name;
     private ArrayList<Edge> outEdges;
@@ -157,7 +151,6 @@ class Vertex implements Comparable<Vertex>{
         return 0;
     }
 }
-
 class Edge{
     private Vertex fromVertex;
     private Vertex toVertex;
@@ -205,7 +198,7 @@ class Pair implements Comparable<Pair>{
     }
 
     @Override
-    public int compareTo(Pair p){
-        return this.distance.compareTo(p.distance);
+    public int compareTo(Pair o){
+        return this.distance.compareTo(o.distance);
     }
 }
